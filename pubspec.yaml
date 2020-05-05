@@ -20,9 +20,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  #  flare_flutter: ^2.0.3
-  #  flutter_bloc: ^4.0.0
-  #  equatable: ^1.1.1
   http: ^0.12.1
 
   # Use with the CupertinoIcons class for iOS style icons.
@@ -33,6 +30,14 @@ dependencies:
 
   # Use to format Date & Time
   intl: ^0.16.1
+
+  # Use to format change launcher icon
+  flutter_launcher_icons: ^0.7.5
+
+flutter_icons:
+  image_path: "assets/images/raindrops.png"
+  ios: true
+  android: "launcher_icon"
 
 dev_dependencies:
   flutter_test:

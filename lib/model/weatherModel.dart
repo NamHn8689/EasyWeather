@@ -1,66 +1,84 @@
 class WeatherModel {
-  Coord coord;
-  List<WeatherElement> weather;
-  String base;
-  Main main;
-  int visibility;
-  Wind wind;
-  Clouds clouds;
-  int dt;
-  Sys sys;
-  int timezone;
   int id;
-  String name;
-  int cod;
+  int time;
+  int sunrise;
+  int sunset;
+
+  String description;
+  String iconCode;
+  String main;
+  String cityName;
+
+  int humidity;
+  int pressure;
+  int visibility;
+  double windSpeed;
+
+  double temperature;
+  double maxTemperature;
+  double minTemperature;
+  double feelsLike;
+
+  Coord coord;
+
+  List<WeatherModel> forecast;
 
   WeatherModel({
-    this.coord,
-    this.weather,
-    this.base,
-    this.main,
-    this.visibility,
-    this.wind,
-    this.clouds,
-    this.dt,
-    this.sys,
-    this.timezone,
     this.id,
-    this.name,
-    this.cod,
+    this.time,
+    this.sunrise,
+    this.sunset,
+    this.description,
+    this.iconCode,
+    this.main,
+    this.cityName,
+    this.humidity,
+    this.pressure,
+    this.visibility,
+    this.windSpeed,
+    this.temperature,
+    this.maxTemperature,
+    this.minTemperature,
+    this.feelsLike,
+    this.coord,
+    this.forecast,
   });
 
-  factory WeatherModel.fromJson(Map<String, dynamic> json) => WeatherModel(
-        coord: Coord.fromJson(json["coord"]),
-        weather: List<WeatherElement>.from(
-            json["weather"].map((x) => WeatherElement.fromJson(x))),
-        base: json["base"],
-        main: Main.fromJson(json["main"]),
-        visibility: json["visibility"],
-        wind: Wind.fromJson(json["wind"]),
-        clouds: Clouds.fromJson(json["clouds"]),
-        dt: json["dt"],
-        sys: Sys.fromJson(json["sys"]),
-        timezone: json["timezone"],
-        id: json["id"],
-        name: json["name"],
-        cod: json["cod"],
-      );
+  static WeatherModel fromJson(Map<String, dynamic> json) {
+    return WeatherModel(
+      id: json['weather'][0]['id'],
+      time: json['dt'],
+      description: json['weather'][0]['description'],
+      iconCode: json['weather'][0]['icon'],
+      main: json['weather'][0]['main'],
+      cityName: json['name'],
+      temperature: json['main']['temp'].toDouble(),
+      maxTemperature: json['main']['temp_max'].toDouble(),
+      minTemperature: json['main']['temp_min'].toDouble(),
+      feelsLike: json['main']["feels_like"].toDouble(),
+      sunrise: json['sys']['sunrise'],
+      sunset: json['sys']['sunset'],
+      visibility: json["visibility"],
+      humidity: json['main']['humidity'],
+      windSpeed: json['wind']['speed'].toDouble(),
+      pressure: json['main']['pressure'],
+      coord: Coord.fromJson(json["coord"]),
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        "coord": coord.toJson(),
-        "weather": List<dynamic>.from(weather.map((x) => x.toJson())),
-        "base": base,
-        "main": main.toJson(),
-        "visibility": visibility,
-        "wind": wind.toJson(),
-        "clouds": clouds.toJson(),
-        "dt": dt,
-        "sys": sys.toJson(),
-        "timezone": timezone,
-        "id": id,
-        "name": name,
-        "cod": cod,
-      };
+  static List<WeatherModel> fromForecastJson(Map<String, dynamic> json) {
+    final weathers = List<WeatherModel>();
+    for (final item in json['list']) {
+      weathers.add(WeatherModel(
+        time: item['dt'],
+        description: json['weather']['main'],
+        temperature: json['main']['temp'].toDouble(),
+        maxTemperature: json['main']['temp_max'].toDouble(),
+        minTemperature: json['main']['temp_min'].toDouble(),
+      ));
+    }
+    return weathers;
+  }
 }
 
 class Coord {
@@ -80,137 +98,5 @@ class Coord {
   Map<String, dynamic> toJson() => {
         "lon": lon,
         "lat": lat,
-      };
-}
-
-class Main {
-  double temp;
-  double feelsLike;
-  double tempMin;
-  double tempMax;
-  int pressure;
-  int humidity;
-
-  Main({
-    this.temp,
-    this.feelsLike,
-    this.tempMin,
-    this.tempMax,
-    this.pressure,
-    this.humidity,
-  });
-
-  factory Main.fromJson(Map<String, dynamic> json) => Main(
-        temp: json["temp"].toDouble(),
-        feelsLike: json["feels_like"].toDouble(),
-        tempMin: json["temp_min"].toDouble(),
-        tempMax: json["temp_max"].toDouble(),
-        pressure: json["pressure"],
-        humidity: json["humidity"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "temp": temp,
-        "feels_like": feelsLike,
-        "temp_min": tempMin,
-        "temp_max": tempMax,
-        "pressure": pressure,
-        "humidity": humidity,
-      };
-}
-
-class Wind {
-  double speed;
-  int deg;
-
-  Wind({
-    this.speed,
-    this.deg,
-  });
-
-  factory Wind.fromJson(Map<String, dynamic> json) => Wind(
-        speed: json["speed"].toDouble(),
-        deg: json["deg"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "speed": speed,
-        "deg": deg,
-      };
-}
-
-class Clouds {
-  int all;
-
-  Clouds({
-    this.all,
-  });
-
-  factory Clouds.fromJson(Map<String, dynamic> json) => Clouds(
-        all: json["all"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "all": all,
-      };
-}
-
-class Sys {
-  int type;
-  int id;
-  String country;
-  int sunrise;
-  int sunset;
-
-  Sys({
-    this.type,
-    this.id,
-    this.country,
-    this.sunrise,
-    this.sunset,
-  });
-
-  factory Sys.fromJson(Map<String, dynamic> json) => Sys(
-        type: json["type"],
-        id: json["id"],
-        country: json["country"],
-        sunrise: json["sunrise"],
-        sunset: json["sunset"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "type": type,
-        "id": id,
-        "country": country,
-        "sunrise": sunrise,
-        "sunset": sunset,
-      };
-}
-
-class WeatherElement {
-  int id;
-  String main;
-  String description;
-  String icon;
-
-  WeatherElement({
-    this.id,
-    this.main,
-    this.description,
-    this.icon,
-  });
-
-  factory WeatherElement.fromJson(Map<String, dynamic> json) => WeatherElement(
-        id: json["id"],
-        main: json["main"],
-        description: json["description"],
-        icon: json["icon"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "main": main,
-        "description": description,
-        "icon": icon,
       };
 }

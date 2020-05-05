@@ -17,7 +17,6 @@ class ThemeBuilder extends StatefulWidget {
 class _ThemeBuilderState extends State<ThemeBuilder> {
   Brightness _brightness;
 
-
   @override
   void initState() {
     super.initState();

@@ -1,6 +1,7 @@
-import 'package:easy_weather/screens/splashScreen.dart';
 import 'package:easy_weather/theme.dart';
 import 'package:flutter/material.dart';
+
+import 'screens/homeScreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,16 +11,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ThemeBuilder(
-      defaultBrightness: Brightness.light,
+      defaultBrightness: Brightness.dark  ,
       builder: (context, _brightness) {
         return MaterialApp(
-          title: 'Flutter Weather App',
+          debugShowCheckedModeBanner: false,
+          title: 'Weather App',
           theme: ThemeData(
             primaryColor: Colors.black,
             brightness: _brightness,
             fontFamily: 'GoogleSans',
           ),
-          home: SplashScreen(),
+//          home: SplashScreen(),
+          home: HomeScreen(),
         );
       },
     );

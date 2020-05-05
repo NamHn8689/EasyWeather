@@ -1,4 +1,5 @@
 import 'package:easy_weather/model/weatherModel.dart';
+import 'package:easy_weather/screens/forecastWidget.dart';
 import 'package:easy_weather/services/WeatherRepo.dart';
 import 'package:easy_weather/theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,10 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
             fontWeight: FontWeight.w300,
           ),
         ),
-        elevation: 0.0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.brightness_4, size: 19),
+            icon: Icon(Icons.brightness_4, size: 20),
             onPressed: () {
               ThemeBuilder.of(context).changeTheme();
             },
@@ -52,9 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        Row(
-                          children: <Widget>[],
-                        ),
                         Container(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -64,79 +61,78 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 Text(
-                                  snapshot.data.name,
+                                  snapshot.data.cityName,
                                   style: TextStyle(
                                     fontSize: 45.0,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                Divider(thickness: 3),
-                                SizedBox(height: 10.0),
-                                Text(
-                                  'Day ' +
-                                      (snapshot.data.main.tempMax - 273.15)
-                                          .toInt()
-                                          .toString() +
-                                      '° ↑' +
-                                      ' • ' +
-                                      'Night ' +
-                                      (snapshot.data.main.tempMin - 273.15)
-                                          .toInt()
-                                          .toString() +
-                                      '° ↓',
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500,
+                                Divider(thickness: 3.5),
+                                Container(
+                                  margin: EdgeInsets.all(0),
+                                  child: Text(
+                                    'Feels like ' +
+                                        (snapshot.data.feelsLike - 273.15)
+                                            .toInt()
+                                            .toString() +
+                                        '°',
+                                    style: TextStyle(fontSize: 18.5),
                                   ),
                                 ),
                                 Row(
                                   children: <Widget>[
                                     Text(
-                                      (snapshot.data.main.temp - 273.15)
+                                      (snapshot.data.temperature - 273.15)
                                               .toInt()
                                               .toString() +
                                           '°',
-                                      style: TextStyle(
-                                        fontSize: 160.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                      style: TextStyle(fontSize: 150.0),
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.only(top: 90.0),
-                                      child: Text(
-                                        'Feels like ' +
-                                            (snapshot.data.main.feelsLike -
-                                                    273.15)
-                                                .toInt()
-                                                .toString() +
-                                            '°',
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.w300,
+                                    Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Image.network(
+                                              'http://openweathermap.org/img/wn/' +
+                                                  snapshot.data.iconCode +
+                                                  '.png',
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                        Row(
+                                          children: <Widget>[
+                                            Text(
+                                                '' +
+                                                    snapshot.data.description[0]
+                                                        .toUpperCase() +
+                                                    snapshot.data.description
+                                                        .substring(1),
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  children: <Widget>[
-                                    Image.network(
-                                      'http://openweathermap.org/img/wn/' +
-                                          snapshot.data.weather[0].icon +
-                                          '.png',
-                                    ),
-                                    Text(
-                                        ' ' +
-                                            snapshot
-                                                .data.weather[0].description[0]
-                                                .toUpperCase() +
-                                            snapshot.data.weather[0].description
-                                                .substring(1),
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.w500)),
-//                                        SizedBox(height: 5.0)
-                                  ],
+                                Text(
+                                  'Day ' +
+                                      (snapshot.data.maxTemperature - 273.15)
+                                          .toInt()
+                                          .toString() +
+                                      '° ↑' +
+                                      ' • ' +
+                                      'Night ' +
+                                      (snapshot.data.minTemperature - 273.15)
+                                          .toInt()
+                                          .toString() +
+                                      '° ↓',
+                                  style: TextStyle(
+                                    fontSize: 16.5,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 Divider(thickness: 3),
                               ],
@@ -145,13 +141,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Container(
                           padding:
-                              EdgeInsets.only(top: 5, left: 20, bottom: 10),
+                              EdgeInsets.only(top: 0, left: 15, bottom: 10),
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Details',
                             style: TextStyle(
-                                fontSize: 26.0,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.w300,
                                 decoration: TextDecoration.underline),
                           ),
                         ),
@@ -161,233 +157,272 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: <Widget>[
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  RaisedButton(
-                                    shape: RoundedRectangleBorder(
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 2.5,
+                                            color: Colors.lightBlueAccent),
                                         borderRadius:
-                                            BorderRadius.circular(5.0)),
-                                    disabledColor: Colors.white,
-                                    disabledElevation: 6.0,
-                                    disabledTextColor: Colors.black,
-                                    onPressed: null,
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: width / 3,
-                                      height: 120.0,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            height: 8.0,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                                color: Colors.lightBlueAccent),
-                                          ),
-                                          SizedBox(height: 20.0),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Image.asset(
-                                                'assets/images/raindrops.png',
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                "  Humidity",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 16.0),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 6.0),
-                                          Text(
-                                            snapshot.data.main.humidity
-                                                    .toString() +
-                                                "%",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 25.0),
-                                          )
-                                        ],
+                                            BorderRadius.circular(8.0)),
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0)),
+                                      disabledColor: Colors.white,
+                                      disabledElevation: 6.0,
+                                      disabledTextColor: Colors.black,
+                                      onPressed: null,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: width / 3,
+                                        height: 120.0,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              height: 8.0,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                  color:
+                                                      Colors.lightBlueAccent),
+                                            ),
+                                            SizedBox(height: 20.0),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Image.asset(
+                                                  'assets/images/raindrops.png',
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  "  Humidity",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 18.0),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 6.0),
+                                            Text(
+                                              snapshot.data.humidity
+                                                      .toString() +
+                                                  "%",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 25.0),
+                                            )
+                                          ],
+                                        ),
                                       ),
+//                                      color: Colors.white,
                                     ),
-                                    color: Colors.white,
                                   ),
-                                  RaisedButton(
-                                    shape: RoundedRectangleBorder(
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 2.5,
+                                            color: Colors.orangeAccent),
                                         borderRadius:
-                                            BorderRadius.circular(5.0)),
+                                            BorderRadius.circular(8.0)),
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0)),
 //                                      elevation: 5.0,
-                                    onPressed: null,
-                                    disabledColor: Colors.white,
-                                    disabledElevation: 6.0,
-                                    disabledTextColor: Colors.black,
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: width / 3,
-                                      height: 120.0,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            height: 8.0,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                                color: Colors.orangeAccent),
-                                          ),
-                                          SizedBox(height: 20.0),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Image.asset(
-                                                'assets/images/sunny.png',
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                "  Visibility",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 16.0),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 6.0),
-                                          Text(
-                                            snapshot.data.visibility
-                                                    .toString() +
-                                                ' m',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 25.0),
-                                          )
-                                        ],
+                                      onPressed: null,
+                                      disabledColor: Colors.white,
+                                      disabledElevation: 6.0,
+                                      disabledTextColor: Colors.black,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: width / 3,
+                                        height: 120.0,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              height: 8.0,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                  color: Colors.orangeAccent),
+                                            ),
+                                            SizedBox(height: 20.0),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Image.asset(
+                                                  'assets/images/sunny.png',
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  "  Visibility",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 18.0),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 6.0),
+                                            Text(
+                                              snapshot.data.visibility.toString() +
+                                                  ' m',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 25.0),
+                                            )
+                                          ],
+                                        ),
                                       ),
+                                      color: Colors.white,
                                     ),
-                                    color: Colors.white,
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10.0),
+                              SizedBox(height: 15),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  RaisedButton(
-                                    shape: RoundedRectangleBorder(
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 2.5,
+                                            color: Colors.purpleAccent),
                                         borderRadius:
-                                            BorderRadius.circular(5.0)),
-                                    elevation: 2.0,
-                                    onPressed: null,
-                                    disabledColor: Colors.white,
-                                    disabledElevation: 6.0,
-                                    disabledTextColor: Colors.black,
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: width / 3,
-                                      height: 120.0,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            height: 8.0,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                                color: Colors.purpleAccent),
-                                          ),
-                                          SizedBox(height: 20.0),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Image.asset(
-                                                'assets/images/wind.png',
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                "  Wind",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 16.0),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 6.0),
-                                          Text(
-                                            snapshot.data.wind.speed
-                                                    .toString() +
-                                                " km/h",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 25.0),
-                                          )
-                                        ],
+                                            BorderRadius.circular(8.0)),
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0)),
+                                      elevation: 2.0,
+                                      onPressed: null,
+                                      disabledColor: Colors.white,
+                                      disabledElevation: 6.0,
+                                      disabledTextColor: Colors.black,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: width / 3,
+                                        height: 120.0,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              height: 8.0,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                  color: Colors.purpleAccent),
+                                            ),
+                                            SizedBox(height: 20.0),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Image.asset(
+                                                  'assets/images/wind.png',
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  "  Wind",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 18.0),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 6.0),
+                                            Text(
+                                              snapshot.data.windSpeed
+                                                      .toString() +
+                                                  " km/h",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 25.0),
+                                            )
+                                          ],
+                                        ),
                                       ),
+                                      color: Colors.white,
                                     ),
-                                    color: Colors.white,
                                   ),
-                                  RaisedButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5.0)),
-                                    elevation: 2.0,
-                                    onPressed: null,
-                                    disabledColor: Colors.white,
-                                    disabledElevation: 6.0,
-                                    disabledTextColor: Colors.black,
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: width / 3,
-                                      height: 120.0,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            height: 8.0,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                                color: Colors.pinkAccent),
-                                          ),
-                                          SizedBox(height: 20.0),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Image.asset(
-                                                'assets/images/brakes.png',
-                                                width: 20,
-                                              ),
-                                              Text(
-                                                "  Pressure",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 16.0),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 6.0),
-                                          Text(
-                                            snapshot.data.main.pressure
-                                                    .toString() +
-                                                " hPa",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 25.0),
-                                          )
-                                        ],
-                                      ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 2.5, color: Colors.pinkAccent),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0)),
+                                      elevation: 2.0,
+                                      onPressed: null,
+                                      disabledColor: Colors.white,
+                                      disabledElevation: 6.0,
+                                      disabledTextColor: Colors.black,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: width / 3,
+                                        height: 120.0,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              height: 8.0,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                  color: Colors.pinkAccent),
+                                            ),
+                                            SizedBox(height: 20.0),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Image.asset(
+                                                  'assets/images/brakes.png',
+                                                  width: 20,
+                                                ),
+                                                Text(
+                                                  "  Pressure",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 18.0),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 6.0),
+                                            Text(
+                                              snapshot.data.pressure
+                                                      .toString() +
+                                                  " hPa",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 25.0),
+                                            )
+                                          ],
+                                        ),
+                                      ),
 //                                      color: Colors.white,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -399,6 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
+                        Forecast(),
                       ],
                     ),
                   ),
