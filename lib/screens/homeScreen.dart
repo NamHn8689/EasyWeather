@@ -25,12 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text(
           DateFormat("EEEE, d MMMM yyyy").format(DateTime.now()),
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w300,
-          ),
+          style: TextStyle(fontSize: 16.0),
         ),
         actions: <Widget>[
           IconButton(
@@ -47,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
               ? Container(
+                  color: Theme.of(context).primaryColorLight,
                   width: width,
                   alignment: Alignment.topCenter,
                   child: SingleChildScrollView(
@@ -140,17 +139,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Container(
-                          padding:
-                              EdgeInsets.only(top: 0, left: 15, bottom: 10),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Details',
-                            style: TextStyle(
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.w300,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
+                            padding: EdgeInsets.only(top: 10, bottom: 20),
+                            alignment: Alignment.center,
+                            child: Text('Details',
+                                style: TextStyle(
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.w500))),
                         Container(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -163,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     decoration: BoxDecoration(
                                         border: Border.all(
                                             width: 2.5,
-                                            color: Colors.lightBlueAccent),
+                                            color: Color(0xFF2E588A)),
                                         borderRadius:
                                             BorderRadius.circular(8.0)),
                                     child: RaisedButton(
@@ -221,7 +215,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ],
                                         ),
                                       ),
-//                                      color: Colors.white,
                                     ),
                                   ),
                                   Container(
@@ -276,7 +269,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             SizedBox(height: 6.0),
                                             Text(
-                                              snapshot.data.visibility.toString() +
+                                              snapshot.data.visibility
+                                                      .toString() +
                                                   ' m',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w700,
@@ -434,7 +428,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        Forecast(),
+                        Forecast(forecast: snapshot.data.forecast),
                       ],
                     ),
                   ),

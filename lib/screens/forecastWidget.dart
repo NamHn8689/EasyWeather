@@ -1,64 +1,90 @@
-
+import 'package:easy_weather/model/weatherModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Forecast extends StatelessWidget {
+  List<WeatherModel> forecast;
 
+  Forecast({@required this.forecast});
+
+  DateTime _getTime(int time) => DateTime.fromMillisecondsSinceEpoch(time);
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width - 28;
-    final height = 300.0;
+
 //    return SizedBox(height: 600.0);
-    return Container(
-      width: width,
-      height: height,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        children: <Widget>[
-          Container(
-            color: Colors.red,
-            width: width / 5,
-            height: height,
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(top: 0, bottom: 6),
+          alignment: Alignment.center,
+          child: Text(
+            '5day forecast',
+            style: TextStyle(
+              fontSize: 22.0,
+            ),
           ),
-          Container(
-            color: Colors.blue,
-            width: width / 5,
-            height: height,
-          ),
-          Container(
-            color: Colors.green,
-            width: width / 5,
-            height: height,
-          ),
-          Container(
-            color: Colors.yellowAccent,
-            width: width / 5,
-            height: height,
-          ),
-          Container(
-            color: Colors.amberAccent,
-            width: width / 5,
-            height: height,
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: 15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(style: BorderStyle.solid),
+                  borderRadius: BorderRadius.circular(8.0)),
+              width: width,
+              height: 160.0,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: forecast.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: width / 4.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text((index > 0)
+                            ? (DateFormat("d/MM").format(_getTime(
+                                        forecast[index].time * 1000)) ==
+                                    DateFormat("d/MM").format(_getTime(
+                                        forecast[index - 1].time * 1000)))
+                                ? ""
+                                : DateFormat("d/MM").format(
+                                    _getTime(forecast[index].time * 1000))
+                            : DateFormat("d/MM")
+                                .format(_getTime(forecast[index].time * 1000))),
+                        Text(DateFormat("HH")
+                                .format(_getTime(forecast[index].time * 1000)) +
+                            "h"),
+//                Text(DateFormat("Hs").format(_getTime(forecast[index].time*1000))),
+
+                        Image.network('http://openweathermap.org/img/wn/' +
+                            forecast[index].iconCode +
+                            '.png'),
+                        Text(forecast[index].description.toString()),
+                        Text((forecast[index].maxTemperature - 273.15)
+                                .round()
+                                .toString() +
+                            '°/ ' +
+                            (forecast[index].minTemperature - 273.15)
+                                .round()
+                                .toString() +
+                            '°'),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 30),
+      ],
     );
   }
 }
-//    return Card(
-//      elevation: 3.0,
-//      child: Container(
-//        height: 500,
-//        width: width,
-//        child: Row(
-//          children: <Widget>[
-//            Container(
-//              width: width / 5,
-//              color: Colors.black,
-//            )
-//          ],
-//        ),
-//      ),
-//    );

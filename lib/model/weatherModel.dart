@@ -66,17 +66,33 @@ class WeatherModel {
     );
   }
 
+  static WeatherModel fromJson2(Map<String, dynamic> json) {
+    return WeatherModel(
+      time: json['dt'],
+      description: json['weather'][0]['main'],
+      temperature: json['main']['temp'].toDouble(),
+      maxTemperature: json['main']['temp_max'].toDouble(),
+      minTemperature: json['main']['temp_min'].toDouble(),
+      iconCode: json['weather'][0]['icon'],
+    );
+  }
+
+
+
   static List<WeatherModel> fromForecastJson(Map<String, dynamic> json) {
     final weathers = List<WeatherModel>();
+
     for (final item in json['list']) {
       weathers.add(WeatherModel(
         time: item['dt'],
-        description: json['weather']['main'],
-        temperature: json['main']['temp'].toDouble(),
-        maxTemperature: json['main']['temp_max'].toDouble(),
-        minTemperature: json['main']['temp_min'].toDouble(),
+        description: item['weather']['main'],
+//        temperature: item['main']['temp'].toDouble(),
+        maxTemperature: item['main']['temp_max'].toDouble(),
+        minTemperature: item['main']['temp_min'].toDouble(),
+        iconCode: item['weather']['icon'],
       ));
     }
+
     return weathers;
   }
 }
